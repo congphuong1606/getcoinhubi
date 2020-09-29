@@ -6,11 +6,9 @@ app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(req, res) {
- let url = 'https://api-cloud.huobi.co.jp/market/detail/merged?symbol=btcjpy';
- let price='0';
   axios({
       method:'get',
-      url
+      url:'https://api-cloud.huobi.co.jp/market/detail/merged?symbol=btcjpy'
   })
   .then(function (response) {
        res.send(JSON.stringify(response.data.tick.close));
