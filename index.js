@@ -30,7 +30,7 @@ function myTimer() {
     myTimer();
   }
 }
-setInterval(myTimer, 6000);
+setInterval(myTimer, 15000);
 
 app.get('/', function(req, res) {
   res.send('HELLO');
