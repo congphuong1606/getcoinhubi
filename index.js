@@ -9,32 +9,36 @@ app.use(express.static(__dirname + '/public'))
 
 
 
-
+let isdone=true;
 function myTimer() {
-  axios.get("https://script.google.com/macros/s/AKfycbxuaXtlqR-Gvr8yEejWTZc18FwpinN703OIiaPOZRT-CwFTwBU/exec?action=insert-data&name=phuong&phone=0965100635&address=nghikieu,nghiloc,nghean")
-     .then((response)  =>  {
-       console.log(response.data);
-     }, (error)  =>  {
-       
- })
+  if(isdone){
+    isdone=false;
+        axios({
+          method:'get',
+          url:'https://api-cloud.huobi.co.jp/market/detail/merged?symbol=btcjpy'
+        }).then(function (response) {
+          console.log(response.data);
+            axios.get("https://script.google.com/macros/s/AKfycbwhq4DLdwrfkow57q2LaklmujQSWvTw3ztxYtyj6zUt5jN2tprd/exec?action=huobijp&price="+response.data.tick.close)
+            .then((response)  =>  {
+              console.log(response.data);
+              isdone=true;
+            }, (error)  =>  {isdone=true;})  
+        })
+        .catch(function (error) {
+            console.log(error);
+            isdone=true;
+        });
+  }else{
+    myTimer();
+  }
+}
+setInterval(myTimer, 6000);
 
-   }
- setInterval(myTimer, 6000);
 
 
 
 app.get('/', function(req, res) {
-  axios({
-      method:'get',
-      url:'https://api-cloud.huobi.co.jp/market/detail/merged?symbol=btcjpy'
-  })
-  .then(function (response) {
-       res.send(JSON.stringify(response.data.tick.close));
-      console.log(response.data.tick.close);     
-  })
-  .catch(function (error) {
-      console.log(error);
-  });
+  res.send('HELLO');
 })
 
 app.listen(app.get('port'), function() {
